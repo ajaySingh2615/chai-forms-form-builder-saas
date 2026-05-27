@@ -15,4 +15,17 @@ export class AuthController {
       next(error);
     }
   };
+
+  public static loginWithEmailAndPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const data = await AuthService.loginWithEmailAndPassword(req.body);
+      return ApiResponse.success(res, 'Login successful', data);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

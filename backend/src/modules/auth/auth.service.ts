@@ -37,7 +37,8 @@ export class AuthService {
       throw ApiError.unauthorized('Invalid email or password');
     }
 
-    const isPasswordValid = await PasswordUtil.compare(user.password, data.password);
+    const isPasswordValid = await PasswordUtil.compare(data.password, user.password);
+
     if (!isPasswordValid) {
       throw ApiError.unauthorized('Invalid email or password');
     }
