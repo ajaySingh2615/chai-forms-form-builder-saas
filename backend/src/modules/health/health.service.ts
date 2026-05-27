@@ -1,5 +1,6 @@
 export class HealthService {
-  public checkStatus() {
+  // Added "static"
+  public static checkStatus() {
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),

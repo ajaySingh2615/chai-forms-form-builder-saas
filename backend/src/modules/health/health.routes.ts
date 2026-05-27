@@ -2,8 +2,7 @@ import { Router } from 'express';
 import { HealthController } from './health.controller.js';
 
 const router = Router();
-const healthController = new HealthController();
 
-router.get('/', healthController.check);
+router.get('/', HealthController.check);
 
 export const healthRoutes: Router = router;
