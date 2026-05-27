@@ -3,9 +3,13 @@ import { AuthService } from './auth.service.js';
 import { ApiResponse } from '../../common/utils/api-response.js';
 
 export class AuthController {
-  public static register = async (req: Request, res: Response, next: NextFunction) => {
+  public static createUserWithEmailAndPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      const newUser = await AuthService.register(req.body);
+      const newUser = await AuthService.createUserWithEmailAndPassword(req.body);
       return ApiResponse.created(res, 'User registerd successfully', newUser);
     } catch (error) {
       next(error);

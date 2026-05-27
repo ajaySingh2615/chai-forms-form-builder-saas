@@ -5,6 +5,10 @@ import { registerSchema } from './dto/auth.dto.js';
 
 const router = Router();
 
-router.post('/register', validateRequest(registerSchema), AuthController.register);
+router.post(
+  '/register',
+  validateRequest(registerSchema),
+  AuthController.createUserWithEmailAndPassword,
+);
 
 export const authRoutes: Router = router;
