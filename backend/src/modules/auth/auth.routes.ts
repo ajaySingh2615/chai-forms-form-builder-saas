@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthController } from './auth.controller.js';
 import { validateRequest } from '../../common/middlewares/validate-request.js';
-import { loginSchema, registerSchema } from './dto/auth.dto.js';
+import { loginSchema, refreshTokenSchema, registerSchema } from './dto/auth.dto.js';
 import { requireAuth } from './middlewares/auth.middleware.js';
 
 const router = Router();
@@ -23,5 +23,7 @@ router.get('/me', requireAuth, (req, res) => {
     userId: userId,
   });
 });
+
+router.post('/refresh-token', validateRequest(refreshTokenSchema), AuthController.refreshToken);
 
 export const authRoutes: Router = router;

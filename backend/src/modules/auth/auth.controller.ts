@@ -28,4 +28,13 @@ export class AuthController {
       next(error);
     }
   };
+
+  public static refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const tokens = await AuthService.refreshToken(req.body);
+      return ApiResponse.success(res, 'Token refreshed successfully', tokens);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
