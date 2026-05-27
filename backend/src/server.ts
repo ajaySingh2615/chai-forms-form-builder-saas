@@ -1,14 +1,13 @@
 import { buildApp } from './app/index.js';
+import { env } from './common/config/env.js';
 
 async function main() {
   // TODO: database connection
 
   const app = buildApp();
 
-  const PORT = process.env.PORT || 8000;
-
-  app.listen(PORT, () => {
-    console.log(`server is running on port ${PORT}`);
+  app.listen(env.PORT, () => {
+    console.log(`server is running on port ${env.PORT}`);
   });
 }
 
