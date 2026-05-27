@@ -1,1 +1,11 @@
-// TODO: Implement Auth DTOs (Login/Register schemas)
+import { z } from 'zod';
+
+export const registerSchema = z.object({
+  body: z.object({
+    fullName: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Invalid email format'),
+    password: z.string().min(8, 'password must be at least 8 characters'),
+  }),
+});
+
+export type RegisterDto = z.infer<typeof registerSchema>['body'];
