@@ -21,4 +21,10 @@ export class UserRepository {
 
     return newUser;
   }
+
+  public static async updateUser(id: string, updateData: any) {
+    const [updateUser] = await db.update(users).set(updateData).where(eq(users.id, id)).returning();
+
+    return updateUser;
+  }
 }
