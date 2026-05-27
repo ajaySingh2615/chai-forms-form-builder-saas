@@ -1,8 +1,9 @@
 import { buildApp } from './app/index.js';
+import { connectDB } from './common/config/db.js';
 import { env } from './common/config/env.js';
 
 async function main() {
-  // TODO: database connection
+  await connectDB();
 
   const app = buildApp();
 
