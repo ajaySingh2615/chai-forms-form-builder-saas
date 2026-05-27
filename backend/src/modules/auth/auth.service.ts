@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '../../common/config/db.js';
 import { users } from './user.model.js';
 import { ApiError } from '../../common/exceptions/api-error.js';
-import type { LoginDto, RegisterDto } from './dto/auth.dto.js';
+import type { LoginDto, RefreshTokenDto, RegisterDto } from './dto/auth.dto.js';
 import { UserRepository } from './user.repository.js';
 import { PasswordUtil } from '../../common/utils/password.util.js';
 import { JwtUtil } from '../../common/utils/jwt.util.js';
@@ -58,6 +58,38 @@ export class AuthService {
         accessToken,
         refreshToken,
       },
+    };
+  }
+
+  public static async refreshToken(data: RefreshTokenDto) {
+    let decoded;
+    try {
+      decoded = JwtUtil.verifyRefreshToken(data.refreshToken);
+    } catch (error) {
+      throw ApiError.unauthorized('Invalid or expired refresh token');
+    }
+
+    // find the user
+    const user = await UserRepository.findUserById(decoded.userId);
+
+    // security check: does the token match the database
+    if (!user || user.refreshToken !== data.refreshToken) {
+      throw ApiError.unauthorized('Invalid or expired refresh token');
+    }
+
+    // Generate new tokens (This is called Refresh Token Rotation)
+    const newAccessToken = JwtUtil.generateAccessToken(user.id);
+    const newRefreshToken = JwtUtil.generateRefreshToken(user.id);
+
+    // save the new token in the DB
+    await UserRepository.updateUser(user.id, {
+      refreshToken: newRefreshToken,
+      updatedAt: new Date(),
+    });
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
     };
   }
 }
