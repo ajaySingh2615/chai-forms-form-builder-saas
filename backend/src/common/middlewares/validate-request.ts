@@ -1,11 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
-import { ZodObject, ZodError } from 'zod';
+// 1. Changed AnyZodObject to ZodSchema (which covers any Zod validation)
+import { type ZodSchema, ZodError } from 'zod';
 import { ApiError } from '../exceptions/api-error.js';
 
-export const validateRequest = (schema: ZodObject) => {
+export const validateRequest = (schema: ZodSchema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // validate body, query, and params all at once
       await schema.parseAsync({
         body: req.body,
         query: req.query,
@@ -15,11 +15,11 @@ export const validateRequest = (schema: ZodObject) => {
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const errorMessages = error.errors
+        // 2. Changed error.errors to error.issues (this is the standard Zod property)
+        const errorMessages = error.issues
           .map((issue) => `${issue.path.join('.')} is ${issue.message}`)
           .join(', ');
 
-        // Pass our custom ApiError to the global error handler
         return next(ApiError.badRequest(errorMessages));
       }
 
