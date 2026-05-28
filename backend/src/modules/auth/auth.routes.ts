@@ -26,4 +26,6 @@ router.get('/me', requireAuth, (req, res) => {
 
 router.post('/refresh-token', validateRequest(refreshTokenSchema), AuthController.refreshToken);
 
+router.post('/logout', requireAuth, AuthController.logout);
+
 export const authRoutes: Router = router;

@@ -1,7 +1,3 @@
-import bcrypt from 'bcryptjs';
-import { eq } from 'drizzle-orm';
-import { db } from '../../common/config/db.js';
-import { users } from './user.model.js';
 import { ApiError } from '../../common/exceptions/api-error.js';
 import type { LoginDto, RefreshTokenDto, RegisterDto } from './dto/auth.dto.js';
 import { UserRepository } from './user.repository.js';
@@ -91,5 +87,15 @@ export class AuthService {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
     };
+  }
+
+  public static async logout(userId: string) {
+    // We just wipe the refresh token from the database!
+    await UserRepository.updateUser(userId, {
+      refreshToken: null,
+      updatedAt: new Date(),
+    });
+
+    return true;
   }
 }

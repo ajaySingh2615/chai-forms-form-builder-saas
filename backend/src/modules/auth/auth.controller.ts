@@ -37,4 +37,15 @@ export class AuthController {
       next(error);
     }
   };
+
+  public static logout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = res.locals.user.id;
+      await AuthService.logout(userId);
+
+      return ApiResponse.success(res, 'Logged out successfully', null);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
